@@ -3,18 +3,18 @@ server:
 
 #公众号配置
 wechat:
-  appId: wx7dbf4e970f5fa297
-  appSecret: 752dce4ade5b775774545e6c740a1ba7
-  tempId: EzG7zfwIMmSCGZs_3hEnVTgf0Wn_G2nhd2UXOBWJdq4
-  myBirthday: 1999-09-17
-  babyBirthday: 1999-10-07
-  loveDay: 2022-08-22
+  appId: 你的appId
+  appSecret: 你的appSecret
+  tempId: 你的模板id
+  myBirthday: 你的生日 yyyy-MM-dd
+  babyBirthday: 同上
+  loveDay: 同上
 
-  tiangouTempId: WxouNL6y4lFzVg0I7_MXUoaVjCtNGYBcSeIXatAB8Y8
-  tiangouDay: 1999-09-17
+  tiangouTempId: 舔狗模板id
+  tiangouDay: 你的生日 yyyy-MM-dd
 
 
 #彩虹屁接口
 tianapi:
-  appKey: 6f09a5dd755cefbfa844da270761d92b
-  area: 深圳市
+  appKey: 天行appKey
+  area: XX市
