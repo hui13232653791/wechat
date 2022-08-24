@@ -1,4 +1,4 @@
-package com.wechat.template.domain.model;
+package com.wangyh.wechat.domain.model;
 
 import lombok.Data;
 

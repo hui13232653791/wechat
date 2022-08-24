@@ -1,8 +1,8 @@
-package com.wechat.template.service;
+package com.wangyh.wechat.service;
 
 import cn.hutool.json.JSONObject;
-import com.wechat.template.domain.model.WeatherInfo;
-import com.wechat.template.domain.vo.WechatSendMsgVo;
+import com.wangyh.wechat.domain.model.WeatherInfo;
+import com.wangyh.wechat.domain.vo.WechatSendMsgVo;
 
 import java.util.List;
 
@@ -26,6 +26,6 @@ public interface WeiXinService {
     //天气信息
     WeatherInfo getWeatherInfo(String appKey, String city);
 
-    //土味情话
+    //舔狗日记
     String getTianGou(String appKey);
 }

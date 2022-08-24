@@ -1,4 +1,4 @@
-package com.wechat.template.constants;
+package com.wangyh.wechat.constants;
 
 /**
  * URL常量

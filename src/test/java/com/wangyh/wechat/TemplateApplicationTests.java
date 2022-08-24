@@ -1,4 +1,4 @@
-package com.wechat.template;
+package com.wangyh.wechat;
 
 import cn.hutool.json.JSONObject;
 import org.junit.jupiter.api.Test;

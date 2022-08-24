@@ -1,4 +1,4 @@
-package com.wechat.template.domain.vo;
+package com.wangyh.wechat.domain.vo;
 
 import lombok.Data;
 import lombok.Getter;

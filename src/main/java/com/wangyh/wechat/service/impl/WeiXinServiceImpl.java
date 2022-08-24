@@ -1,13 +1,13 @@
-package com.wechat.template.service.impl;
+package com.wangyh.wechat.service.impl;
 
 import cn.hutool.http.HttpUtil;
 import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
-import com.wechat.template.constants.UrlConstant;
-import com.wechat.template.domain.model.WeatherInfo;
-import com.wechat.template.domain.vo.WechatSendMsgVo;
-import com.wechat.template.service.WeiXinService;
+import com.wangyh.wechat.constants.UrlConstant;
+import com.wangyh.wechat.domain.model.WeatherInfo;
+import com.wangyh.wechat.service.WeiXinService;
+import com.wangyh.wechat.domain.vo.WechatSendMsgVo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;

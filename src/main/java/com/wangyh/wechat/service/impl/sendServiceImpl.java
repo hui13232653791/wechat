@@ -1,27 +1,25 @@
-package com.wechat.template.task;
+package com.wangyh.wechat.service.impl;
 
 import cn.hutool.json.JSONObject;
-import com.wechat.template.config.TianApiConfig;
-import com.wechat.template.config.WechatConfig;
-import com.wechat.template.domain.model.WeatherInfo;
-import com.wechat.template.domain.vo.WechatSendMsgVo;
-import com.wechat.template.domain.vo.WechatTemplateVo;
-import com.wechat.template.service.WeiXinService;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.scheduling.annotation.Scheduled;
+import com.wangyh.wechat.config.TianApiConfig;
+import com.wangyh.wechat.config.WechatConfig;
+import com.wangyh.wechat.domain.model.WeatherInfo;
+import com.wangyh.wechat.domain.vo.WechatSendMsgVo;
+import com.wangyh.wechat.domain.vo.WechatTemplateVo;
+import com.wangyh.wechat.service.WeiXinService;
+import com.wangyh.wechat.service.sendService;
+import com.wangyh.wechat.utils.util;
+import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-/**
- * 微信定时任务
- */
-@Configuration
-@EnableScheduling
-public class WechatTask {
+@Service
+public class sendServiceImpl implements sendService {
 
     @Resource
     private WeiXinService weiXinService;
@@ -32,12 +30,9 @@ public class WechatTask {
     @Resource
     private TianApiConfig tianApiConfig;
 
-    /**
-     * 微信模板消息推送
-     * @throws ParseException
-     */
-    @Scheduled(cron="0 0 9 * * ? ")
-    public void sendLoveMsg() throws ParseException {
+
+    @Override
+    public void sendLoveMsg() {
         //配置及数据
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
         String date = simpleDateFormat.format(new Date());
@@ -88,13 +83,13 @@ public class WechatTask {
             //今日建议
             map.put("tips",new WechatTemplateVo(weatherInfo.getTips(),"#FF7F24"));
             //相爱天数
-            int loveDays = fun(loveDay, date);
+            int loveDays = util.fun(loveDay, date);
             map.put("loveDay",new WechatTemplateVo(loveDays+"","#EE6AA7"));
             //我的生日
-            int myDay = fun2(myBirthday);
+            int myDay = util.fun2(myBirthday);
             map.put("myBirthday",new WechatTemplateVo(myDay+"","#EE6AA7"));
             //宝贝生日
-            int babyDay = fun2(babyBirthday);
+            int babyDay = util.fun2(babyBirthday);
             map.put("babyBirthday",new WechatTemplateVo(babyDay+"","#EE6AA7"));
             //彩虹屁
             map.put("pipi",new WechatTemplateVo(caiHongPiInfo,"#E066FF"));
@@ -104,8 +99,8 @@ public class WechatTask {
         }
     }
 
-    @Scheduled(cron = "0 0 21 * * ?")
-    public void sendTianGouMsg() throws ParseException {
+    @Override
+    public void sendTianGouMsg() {
         //配置及数据
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
         String date = simpleDateFormat.format(new Date());
@@ -117,6 +112,9 @@ public class WechatTask {
         String token = weiXinService.getAccessToken(appId, appSecret);
         //获取关注用户
         List<String> userList = weiXinService.getUserList(token);
+        //获取舔狗日记
+        String tianGou = weiXinService.getTianGou(appKey);
+
         for (String openId : userList) {
             //发送消息实体
             WechatSendMsgVo sendMsgVo = new WechatSendMsgVo();
@@ -125,49 +123,12 @@ public class WechatTask {
             //设置接收用户
             sendMsgVo.setTouser(openId);
             Map<String, WechatTemplateVo> map = new HashMap<>();
-            //获取舔狗日记
-            String tianGou = weiXinService.getTianGou(appKey);
+            //设置舔狗日记
             map.put("tianGou", new WechatTemplateVo(tianGou, "#FF7F24"));
-            int loveDays = fun(tiangouDay, date);
+            int loveDays = util.fun(tiangouDay, date);
             map.put("loveDay",new WechatTemplateVo(loveDays+"","#EE6AA7"));
             sendMsgVo.setData(map);
             JSONObject entries = weiXinService.sendMsg(sendMsgVo, token, openId);
         }
-    }
-
-    public int fun(String s1,String s2) throws ParseException {
-        //指定格式
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        //获取Date
-        Date t1 = simpleDateFormat.parse(s1);
-        Date t2 = simpleDateFormat.parse(s2);
-
-        //获取时间戳
-        Long time1 = t1.getTime();
-        Long time2 = t2.getTime();
-        Long num = time2- time1;
-        Long day= num/24/60/60/1000;
-        //返回相差天数
-        return day.intValue();
-    }
-
-    public int fun2(String myBirthday) throws  ParseException {
-        //指定格式
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-
-        Calendar cToday = Calendar.getInstance(); // 存今天
-        Calendar cBirth = Calendar.getInstance(); // 存生日
-        cBirth.setTime(simpleDateFormat.parse(myBirthday)); // 设置生日
-        cBirth.set(Calendar.YEAR, cToday.get(Calendar.YEAR)); // 修改为本年
-        int days;
-        if (cBirth.get(Calendar.DAY_OF_YEAR) < cToday.get(Calendar.DAY_OF_YEAR)) {
-            // 生日已经过了，要算明年的了
-            days = cToday.getActualMaximum(Calendar.DAY_OF_YEAR) - cToday.get(Calendar.DAY_OF_YEAR);
-            days += cBirth.get(Calendar.DAY_OF_YEAR);
-        } else {
-            // 生日还没过
-            days = cBirth.get(Calendar.DAY_OF_YEAR) - cToday.get(Calendar.DAY_OF_YEAR);
-        }
-        return days;
     }
 }
